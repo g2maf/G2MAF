@@ -6,11 +6,6 @@ from .config import *
 from .data_encoder import *
 from .evaluator import MADEvaluator
 try:
-    from .mahalfcheetah_rendering import MAHalfCheetahRenderer
-except Exception:
-    # Optional MA-MuJoCo renderer; do not block MPE/SMAC imports.
-    MAHalfCheetahRenderer = None
-try:
     from .mamujoco_rendering import MAMuJoCoRenderer
 except Exception:
     # Optional MA-MuJoCo renderer; do not block MPE/SMAC imports.
@@ -26,3 +21,12 @@ from .serialization import *
 from .setup import *
 from .smac_rendering import SMACRenderer
 from .training import *
+
+
+def __getattr__(name):
+    # MPE and SMAC must not import the optional MuJoCo renderer.
+    if name == "MAHalfCheetahRenderer":
+        from .mahalfcheetah_rendering import MAHalfCheetahRenderer
+        globals()[name] = MAHalfCheetahRenderer
+        return MAHalfCheetahRenderer
+    raise AttributeError(name)

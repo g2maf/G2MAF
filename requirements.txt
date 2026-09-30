@@ -1,45 +1,32 @@
-isort==5.12.0
-black==23.1.0
-Cython==0.29.21
+# Python 3.8. Install pip==23.0.1 setuptools==65.5.0 wheel==0.38.4 first.
+# Install the desired PyTorch 1.12.1 build before this file.
+torch==1.12.1
+numpy==1.24.4
+PyYAML==6.0.1
 diffusers==0.24.0
-einops
-enum34==1.1.10
-gitdb==4.0.5
-GitPython==3.1.9
-gtimer
+huggingface-hub==0.25.2
+# Legacy Gym metadata needs the bootstrap tool versions above.
 gym==0.12.1
-gymnasium==0.27.1
-jaynes==0.8.11
-joblib==0.16.0
-matplotlib
+einops==0.8.1
+matplotlib==3.7.5
+seaborn==0.13.2
+scipy==1.10.1
+pandas==2.0.3
+gtimer==1.0.0b5
 ml-logger==0.8.69
-numpy>=1.23.0
-opencv-python
-opt-einsum==3.1.0
-packaging==23.0
-pandas
 params-proto==2.9.6
-path==15.0.0
-pygame
-pyglet==1.5.0
-pyparsing==2.2.2
-pyrsistent==0.16.0
-PySC2==3.0.0
-pytest==3.8.2
-python-dateutil==2.7.3
-python-utils==2.4.0
-PyYAML==6.0
-scikit-image==0.19.3
-scipy
-seaborn
+tensorboardX==2.6.2.2
+protobuf==3.20.3
+wandb==0.16.6
+pygame==2.6.1
+pyglet==1.5.27
+opencv-python==4.10.0.84
 scikit-video==1.1.11
-subprocess32==3.5.4
-tensorboard==2.0.2
-tensorboardX==2.0
-tqdm
+scikit-image==0.21.0
+python-dateutil==2.9.0.post0
+tqdm==4.67.1
+psutil==7.0.0
 typed-argument-parser==1.7.2
-wandb
 -e ./third_party/multiagent-particle-envs
--e ./third_party/og-marl[datasets]
 -e ./third_party/ddpg-agent
 -e .

@@ -101,15 +101,18 @@ def main():
     normalize_grad = not args.no_normalize_grad
 
     summary = []
+    failures = []
     for tr in test_rets:
         for qs in g2maf_steps:
             try:
                 rec = run_one(args.log_dir, args.load_step, args.num_eval,
                               tr, qs, args.critic_path, normalize_grad,
                               args.results_subdir, args.overwrite)
-                if rec:
-                    summary.append(rec)
+                if rec is None:
+                    raise RuntimeError("Evaluator returned no metrics")
+                summary.append(rec)
             except Exception as e:
+                failures.append(str(e))
                 print(f"[ERROR] test_ret={tr} g2maf_step={qs}: {e}")
                 import traceback
                 traceback.print_exc()
@@ -134,6 +137,9 @@ def main():
                 cells.append(f"{v:7.0f}({v-base:+.0f})")
         print(f"  {tr:5.2f}  | " + " | ".join(cells))
     print("=" * 70)
+
+    if failures:
+        raise SystemExit("Evaluation failed for %d setting(s)" % len(failures))
 
 
 if __name__ == "__main__":
