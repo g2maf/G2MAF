@@ -6,6 +6,7 @@ RAW obs/act (no normalization) -> usable by the post-action refinement path
 MPE: 3 agents, obs 18/agent (54 joint), act 2/agent (6 joint), fixed 25-step episodes
 (dones are all zero), reward = sum over agents.
 """
+from training_seeds import add_training_arguments, prepare_training, seed_output
 import argparse, glob, json, os
 from pathlib import Path
 import numpy as np
@@ -73,8 +74,12 @@ def main():
     ap.add_argument("--hidden", type=int, default=512)
     ap.add_argument("--log_every", type=int, default=200)
     ap.add_argument("--save_every", type=int, default=5000)
+    add_training_arguments(ap)
     args = ap.parse_args()
+    if prepare_training(args, None):
+        return
 
+    args.out_dir = seed_output(args.out_dir, args)
     out = Path(args.out_dir); out.mkdir(parents=True, exist_ok=True)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -100,7 +105,7 @@ def main():
     (out / "config.json").write_text(json.dumps(config, indent=2))
     mp = out / "metrics.jsonl"
 
-    g = torch.Generator().manual_seed(0); n = len(idx_t); run = []
+    g = torch.Generator().manual_seed(args.training_seed); n = len(idx_t); run = []
     for step in range(1, args.steps + 1):
         sel = idx_t[torch.randint(0, n, (args.batch_size,), generator=g)]
         o = obs_t[sel].to(device); a = act_t[sel].to(device); r = rew_t[sel].to(device)

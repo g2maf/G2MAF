@@ -5,6 +5,7 @@ The post-action CCR path uses raw observations/actions. In-loop guidance operate
 on CoFlow's normalized generated states, so the critic must be trained after the
 same dataset normalizer used by the frozen policy.
 """
+from training_seeds import add_training_arguments, prepare_training, seed_output
 import argparse
 import glob
 import json
@@ -131,8 +132,12 @@ def main():
     ap.add_argument("--log_every", type=int, default=200)
     ap.add_argument("--save_every", type=int, default=5000)
     ap.add_argument("--max_samples", type=int)
+    add_training_arguments(ap)
     args = ap.parse_args()
+    if prepare_training(args, None):
+        return
 
+    args.log_dir = args.log_dir.replace("{seed}", str(args.training_seed))
     if args.domain == "mamujoco":
         obs, act, rew, idx = load_mamujoco(args.data_dir)
     else:
@@ -147,6 +152,7 @@ def main():
     print(f"[norm] obs_dim={obs_dim} act_dim={act_dim} "
           f"obs=[{obs_n.min():.3f},{obs_n.max():.3f}] act=[{act_n.min():.3f},{act_n.max():.3f}]")
 
+    args.out_dir = seed_output(args.out_dir, args)
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -172,7 +178,7 @@ def main():
     (out / "config.json").write_text(json.dumps(config, indent=2))
     metrics_path = out / "metrics.jsonl"
 
-    gen = torch.Generator().manual_seed(0)
+    gen = torch.Generator().manual_seed(args.training_seed)
     running = []
     n = len(idx_t)
     for step in range(1, args.steps + 1):

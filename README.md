@@ -126,3 +126,20 @@ The paper reports paired five-seed aggregates. The entry points above execute
 one chosen run at a time, so users can specify a checkpoint, dataset root, GPU,
 and seed protocol. `RELEASE_MANIFEST.md` lists the G²MAF-specific files in
 this archive.
+
+## Independent training seeds
+
+Policy configurations use five training seeds: `100, 200, 300, 400, 500`.
+The auxiliary training entry points now use the same five seeds by default,
+run sequentially in separate processes. Initialization and training sampling
+use the selected seed; each run saves under `seed_<seed>/` in its output
+directory, including a `training_seed.json` record.
+
+Use `--training-seeds 100 200 300` for three runs,
+`--training-seeds 100` for a single run, or `--dry-run` to inspect the
+commands without loading data or training. Evaluation seeds and dataset
+source seeds are separate. These defaults configure new training runs;
+they do not establish that historical results or released checkpoints
+contain five independently trained models.
+
+This applies to the MPE, SMAC, and trajectory critic scripts under `scripts/train_g2maf*.py`. For a complete policy-plus-critic replicate, use the matching policy training seed as well. `--log_dir` for the trajectory critic can contain `{seed}`, which is expanded to the selected training seed; a fixed path deliberately reuses the same frozen policy normalizer. Supply the corresponding `seed_<seed>/critic_step_*.pt` to evaluation.
