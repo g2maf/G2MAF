@@ -1,0 +1,18 @@
+meta_data:
+  exp_name: "eval_inv"
+  script_path: "run_scripts/evaluate.py"
+  num_workers: 2
+
+variables:
+  # Replace with the trained CoFlow run directory to evaluate.
+  log_dir: ["logs/<env>/<task-quality>/<run-name>/<seed>"]
+
+constants:
+  # eval
+  load_steps: [0]
+  num_eval: 10
+  num_envs: 10
+  evaluator: "utils.MADEvaluator"
+  overwrite: True
+  use_ddim_sample: True
+  n_ddim_steps: 15
