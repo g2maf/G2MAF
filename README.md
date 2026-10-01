@@ -1,6 +1,6 @@
 # G²MAF Release
 
-[Paper](https://arxiv.org/abs/2609.31286) · [Project page](https://g2maf.github.io/) · [Models](https://huggingface.co/g2maf/G2MAF) · [Datasets](https://huggingface.co/datasets/Guowei-Zou/CoFlow-datasets)
+[Paper](https://arxiv.org/abs/2609.31286) · [Project page](https://g2maf.github.io/) · [Models](https://huggingface.co/g2maf/G2MAF) · [Datasets](https://huggingface.co/datasets/coflow-project/CoFlow-datasets)
 
 By [Guowei Zou](https://guowei-zou.github.io/Guowei-Zou/) and collaborators.
 
